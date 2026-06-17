@@ -36,12 +36,3 @@ Large Language Models (LLMs) frequently hallucinate fictional game mechanics whe
 4. **Macro Rule Paradigms:** An unsupervised **K-Means Clustering** engine groups the database into 8 distinct strategic rule profiles (e.g., *Heavy Macro-Economic Logistics*, *Narrative Campaign Systems*), allowing input prompts to instantly align with a broader structural rule family blueprint.
 
 ---
-
-## 📦 Local Installation & Setup
-
-To run the application or the background modules locally on your workstation:
-
-### 1. Clone the Repository
-```bash
-git clone [https://github.com/akashhh-codes/boardgame-mechanics-ai.git](https://github.com/akashhh-codes/boardgame-mechanics-ai.git)
-cd boardgame-mechanics-ai
