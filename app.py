@@ -18,6 +18,8 @@ st.write("Welcome! This data-science-driven tool uses NLP and unsupervised machi
 # --- LOAD DATA & MODELS (Cached to run quickly) ---
 @st.cache_resource
 def load_resources():
+    from sklearn.cluster import KMeans  # Import KMeans inside the loader
+    
     # Load dataset
     df = pd.read_csv("top_1000_board_games.csv")
     # Re-parse lists
@@ -29,6 +31,11 @@ def load_resources():
     
     # Generate/cache embeddings matrix locally for speed
     embeddings = model.encode(df['description'].fillna("").tolist(), show_progress_bar=False)
+    
+    # DYNAMIC PATCH: Train K-Means right here so 'cluster_id' is permanently available
+    kmeans = KMeans(n_clusters=8, random_state=42, n_init=10)
+    df['cluster_id'] = kmeans.fit_predict(embeddings)
+    
     return df, model, embeddings
 
 df, model, embeddings = load_resources()
