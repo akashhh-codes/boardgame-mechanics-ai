@@ -25,3 +25,29 @@ project/
 ├── app.py                           # Decoupled Streamlit front-end configuration
 ├── requirements.txt                 # Target environment dependencies
 └── README.md                        # Documentation
+
+---
+
+
+```markdown
+---
+
+## 🚀 Core Methodology & AI Guardrails
+
+Large Language Models (LLMs) frequently hallucinate fictional game mechanics when asked to generate rules out of thin air. This tool implements a **Closed-Loop Retrieval-Augmented Strategy** to ensure absolute data validity:
+
+1. **Semantic Feature Mapping:** Raw human-written text descriptions are transformed into a dense, 384-dimensional vector coordinate space using a state-of-the-art Transformer encoder (`all-MiniLM-L6-v2`).
+2. **Mathematical Grounding:** Input concepts are verified against the Top 1,000 board games in the database using **Cosine Similarity** arrays. This anchors user recommendations strictly onto verified real-world evidence.
+3. **Statistical Taxonomy (Ontology):** Using Agglomerative Hierarchical Clustering with Ward's linkage, the system maps out an objective taxonomy of game mechanics, visualized directly on the dashboard via an analytical **Dendrogram**.
+4. **Macro Rule Paradigms:** An unsupervised **K-Means Clustering** engine groups the database into 8 distinct strategic rule profiles (e.g., *Heavy Macro-Economic Logistics*, *Narrative Campaign Systems*), allowing input prompts to instantly align with a broader structural rule family blueprint.
+
+---
+
+## 📦 Local Installation & Setup
+
+To run the application or the background modules locally on your workstation:
+
+### 1. Clone the Repository
+```bash
+git clone [https://github.com/akashhh-codes/boardgame-mechanics-ai.git](https://github.com/akashhh-codes/boardgame-mechanics-ai.git)
+cd boardgame-mechanics-ai
