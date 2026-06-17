@@ -19,7 +19,7 @@ st.write("Welcome! This data-science-driven tool uses NLP and unsupervised machi
 @st.cache_resource
 def load_resources():
     # Load dataset
-    df = pd.read_csv("/content/drive/MyDrive/BoardGame_AI_Project/top_1000_board_games.csv")
+    df = pd.read_csv("top_1000_board_games.csv")
     # Re-parse lists
     df['mechanics_list'] = df['mechanics'].apply(lambda x: ast.literal_eval(x) if pd.notna(x) else [])
     df['categories_list'] = df['categories'].apply(lambda x: ast.literal_eval(x) if pd.notna(x) else [])
@@ -37,7 +37,7 @@ df, model, embeddings = load_resources()
 st.sidebar.header("📊 Mapped Mechanics Taxonomy")
 st.sidebar.write("This tree structure shows how game mechanics statistically group together based on 1,000 top BGG games.")
 
-dendrogram_path = os.path.join("/content/drive/MyDrive/BoardGame_AI_Project", "mechanics_dendrogram.png")
+dendrogram_path = "mechanics_dendrogram.png"
 if os.path.exists(dendrogram_path):
     try:
         # FIX: Open the image via PIL first instead of passing a raw path string
