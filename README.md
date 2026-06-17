@@ -25,7 +25,7 @@ project/
 ├── app.py                           # Decoupled Streamlit front-end configuration
 ├── requirements.txt                 # Target environment dependencies
 └── README.md                        # Documentation
-
+```
 ## 🚀 Core Methodology & AI Guardrails
 
 Large Language Models (LLMs) frequently hallucinate fictional game mechanics when asked to generate rules out of thin air. This tool implements a **Closed-Loop Retrieval-Augmented Strategy** to ensure absolute data validity:
