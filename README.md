@@ -4,6 +4,12 @@ A production-grade, full-stack data science application that maps abstract game 
 
 ---
 
+# 🔗 Link
+
+https://boardgame-mechanics-ai-akashhh-codes.streamlit.app/
+
+---
+
 ## 🛠️ Project Architecture & Directory Layout
 
 Unlike standard monolithic notebooks, this system is engineered following professional software development patterns. The codebase is entirely decoupled into separate functional modules:
