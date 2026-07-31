@@ -347,18 +347,19 @@ with st.sidebar:
 
 
 # ─── PAGE: DASHBOARD (LANDING) ─────────────────────────────
-    if page == "🏠 Dashboard":
+if page == "🏠 Dashboard":
     st.markdown("""
     <div class="main-header" style="text-align:center;">
         <h1>🧠 Board Game Rulebook Intelligence System</h1>
-        <p style="font-size: 1.2rem; font-weight: 500; color: #a5abff;">Ontology-Guided Hybrid Retrieval using Sentence-BERT (MiniLM) and Hierarchical Clustering</p>
+        <p style="font-size: 1.2rem; font-weight: 500; color: #a5abff;">
+            Ontology-Guided Hybrid Retrieval using Sentence-BERT (MiniLM) and Hierarchical Clustering
+        </p>
     </div>
     """, unsafe_allow_html=True)
-    
+
     # Initialize cached pipeline
     api_key = st.session_state.get("gemini_api_key") or os.environ.get("GEMINI_API_KEY", "")
 
-    # FIXED: Indented to sit inside the 'if page == "🏠 Dashboard":' block
     with st.spinner("Initializing Semantic Engine..."):
         (
             df,
@@ -370,17 +371,15 @@ with st.sidebar:
             retriever,
         ) = initialize_pipeline(api_key)
 
-    # FIXED: Indented to sit inside the 'if page == "🏠 Dashboard":' block
     st.markdown(f"""
     <div style="background: rgba(124, 131, 255, 0.1); border: 1px solid rgba(124, 131, 255, 0.2); padding: 10px; border-radius: 8px; text-align: center; margin-bottom: 2rem;">
-        <span style="margin: 0 15px;">🎲 <strong>Dataset:</strong> {len(df)} Games</span> | 
-        <span style="margin: 0 15px;">⚙️ <strong>Mechanics:</strong> {len(all_mechanics)}</span> | 
-        <span style="margin: 0 15px;">🌳 <strong>Ontology Nodes:</strong> {len(all_mechanics)}</span> | 
+        <span style="margin: 0 15px;">🎲 <strong>Dataset:</strong> {len(df)} Games</span> |
+        <span style="margin: 0 15px;">⚙️ <strong>Mechanics:</strong> {len(all_mechanics)}</span> |
+        <span style="margin: 0 15px;">🌳 <strong>Ontology Nodes:</strong> {len(all_mechanics)}</span> |
         <span style="margin: 0 15px;">📦 <strong>Clusters:</strong> {len(cluster_results['clusters'])}</span> |
         <span style="margin: 0 15px;">🧠 <strong>Embedding:</strong> {SBERT_MODEL_NAME}</span>
     </div>
     """, unsafe_allow_html=True)
-
     
     # Zone 1: Search Box & Quick Examples
     if "search_query" not in st.session_state:
