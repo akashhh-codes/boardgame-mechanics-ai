@@ -171,13 +171,7 @@ class RAGRetriever:
         self.labeled_clusters = labeled_clusters or {}
         self.game_data = game_data
         
-        # Initialize Cross-Encoder for Stage 2 Re-ranking
-        try:
-            from sentence_transformers import CrossEncoder
-            self.cross_encoder = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')
-            logger.info("CrossEncoder initialized successfully for Stage 2 Re-ranking.")
-        except Exception as e:
-            logger.warning(f"Could not load CrossEncoder: {e}")
+        # Disabled for Streamlit deployment
             self.cross_encoder = None
         
         logger.info(
@@ -199,7 +193,7 @@ class RAGRetriever:
         try:
             import time
             logger.info("Waiting 16 seconds to respect Gemini Free Tier rate limits (15 RPM)...")
-            time.sleep(16)  # Avoid Free Tier 15 RPM rate limit
+            time.sleep(1)  # Avoid Free Tier 15 RPM rate limit
 
             try:
                 import google.genai as genai
