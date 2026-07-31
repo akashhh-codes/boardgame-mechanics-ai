@@ -236,6 +236,50 @@ def get_retriever(_engine, mechanic_labels, mechanic_embeddings, labeled_cluster
         labeled_clusters=labeled_clusters,
         game_data=game_data
     )
+@st.cache_resource
+def initialize_pipeline(api_key):
+
+    df = load_dataset()
+    all_mechanics = get_all_mechanics(df)
+
+    engine = load_embedding_engine()
+    mechanic_embeddings = compute_mechanic_embeddings(all_mechanics)
+
+    cluster_results, _ = run_full_pipeline(
+        all_mechanics,
+        mechanic_embeddings
+    )
+
+    clusters_for_labeling = {
+        str(k): {
+            "members": v["members"],
+            "size": v["size"]
+        }
+        for k, v in cluster_results["clusters"].items()
+    }
+
+    labeled_clusters = run_labeling(
+        clusters_for_labeling,
+        api_key
+    )
+
+    retriever = get_retriever(
+        _engine=engine,
+        mechanic_labels=all_mechanics,
+        mechanic_embeddings=mechanic_embeddings,
+        labeled_clusters=labeled_clusters,
+        game_data=df
+    )
+
+    return (
+        df,
+        all_mechanics,
+        engine,
+        mechanic_embeddings,
+        cluster_results,
+        labeled_clusters,
+        retriever,
+    )
 
 
 # ─── Sidebar Navigation ─────────────────────────────────────
@@ -307,33 +351,23 @@ if page == "🏠 Dashboard":
     st.markdown("""
     <div class="main-header" style="text-align:center;">
         <h1>🧠 Board Game Rulebook Intelligence System</h1>
-        <p style="font-size: 1.2rem; font-weight: 500; color: #a5abff;">Ontology-Guided Hybrid Retrieval using Sentence-BERT (MiniLM), HAC and Cross-Encoder</p>
+        <p style="font-size: 1.2rem; font-weight: 500; color: #a5abff;">Ontology-Guided Hybrid Retrieval using Sentence-BERT (MiniLM) and Hierarchical Clustering</p>
     </div>
     """, unsafe_allow_html=True)
     
-    # Load data
-    df = load_dataset()
-    all_mechanics = get_all_mechanics(df)
-    
-    with st.spinner("Initializing Semantic Engine..."):
-        engine = load_embedding_engine()
-        mechanic_embeddings = compute_mechanic_embeddings(all_mechanics)
-        cluster_results, _ = run_full_pipeline(all_mechanics, mechanic_embeddings)
-        
-        clusters_for_labeling = {
-            str(k): {"members": v["members"], "size": v["size"]}
-            for k, v in cluster_results["clusters"].items()
-        }
-        api_key = st.session_state.get("gemini_api_key") or os.environ.get("GEMINI_API_KEY", "")
-        labeled_clusters = run_labeling(clusters_for_labeling, api_key)
-        
-        retriever = get_retriever(
-            _engine=engine,
-            mechanic_labels=all_mechanics,
-            mechanic_embeddings=mechanic_embeddings,
-            labeled_clusters=labeled_clusters,
-            game_data=df
-        )
+    # Initialize cached pipeline
+    api_key = st.session_state.get("gemini_api_key") or os.environ.get("GEMINI_API_KEY", "")
+
+with st.spinner("Initializing Semantic Engine..."):
+    (
+        df,
+        all_mechanics,
+        engine,
+        mechanic_embeddings,
+        cluster_results,
+        labeled_clusters,
+        retriever,
+    ) = initialize_pipeline(api_key)
 
     # Info Strip
     st.markdown(f"""
@@ -398,7 +432,7 @@ if page == "🏠 Dashboard":
             # Check for Rate Limit specifically to give a friendly error
             error_text = results.get("llm_error")
             if "429" in error_text or "RESOURCE_EXHAUSTED" in error_text:
-                st.warning("⚠️ **Gemini API Rate Limit Exceeded (Free Tier)**. Automatically falling back to Local SBERT Retrieval Engine.")
+                st.warning("⚠️ **Using local semantic retrieval (SBERT)**. Results remain available even when the Gemini API is unavailable.")
             else:
                 st.warning("⚠️ **Gemini API Error**. Automatically falling back to Local SBERT Retrieval Engine.")
         else:
@@ -483,7 +517,7 @@ if page == "🏠 Dashboard":
         silhouette = cluster_results.get("silhouette_score", 0.0)
         m_col3.metric("Silhouette Score (Clustering)", f"{silhouette:.2f}" if silhouette else "0.45")
         
-        st.markdown("<br>### ⚙ Pipeline Architecture", unsafe_allow_html=True)
+        st.markdown("<br>### ⚙ System Pipeline", unsafe_allow_html=True)
         st.markdown("""
         <div style="display: flex; justify-content: space-between; text-align: center; background: #16162a; padding: 20px; border-radius: 12px; border: 1px solid #2a2a4a;">
             <div style="flex:1;"><strong>PDF</strong><br><span style="color:#888; font-size:0.8rem;">PyMuPDF</span></div>
@@ -494,9 +528,9 @@ if page == "🏠 Dashboard":
             <div style="color:#7c83ff;">➔</div>
             <div style="flex:1;"><strong>Ontology</strong><br><span style="color:#888; font-size:0.8rem;">HAC Clustering</span></div>
             <div style="color:#7c83ff;">➔</div>
-            <div style="flex:1;"><strong>Hybrid RAG</strong><br><span style="color:#888; font-size:0.8rem;">Cross-Encoder</span></div>
+            <div style="flex:1;"><strong>Hybrid Retrieval</strong><br><span style="color:#888; font-size:0.8rem;">SBERT + Lexical Search</span></div>
             <div style="color:#7c83ff;">➔</div>
-            <div style="flex:1;"><strong>Labeling</strong><br><span style="color:#888; font-size:0.8rem;">Gemini Flash</span></div>
+            <div style="flex:1;"><strong>Cluster Labeling</strong><br><span style="color:#888; font-size:0.8rem;">LLM-assisted</span></div>
         </div>
         """, unsafe_allow_html=True)
         
@@ -512,7 +546,7 @@ if page == "🏠 Dashboard":
             <span style="color: #a5abff; margin: 0 10px;">UMAP</span> | 
             <span style="color: #a5abff; margin: 0 10px;">HAC</span> | 
             <span style="color: #a5abff; margin: 0 10px;">Gemini</span> | 
-            <span style="color: #a5abff; margin: 0 10px;">Cross-Encoder</span> | 
+            <span style="color: #a5abff; margin: 0 10px;">SBERT + Lexical Search</span> | 
             <span style="color: #a5abff; margin: 0 10px;">Streamlit</span>
         </div>
         """, unsafe_allow_html=True)
@@ -820,35 +854,18 @@ elif page == "📈 Evaluation":
     </div>
     """, unsafe_allow_html=True)
     
-    df = load_dataset()
-    all_mechanics = get_all_mechanics(df)
-    
-    with st.spinner("Setting up evaluation pipeline..."):
-        engine = load_embedding_engine()
-        mechanic_embeddings = compute_mechanic_embeddings(all_mechanics)
-        cluster_results, _ = run_full_pipeline(all_mechanics, mechanic_embeddings)
-    
-    clusters_for_labeling = {
-        str(k): {"members": v["members"], "size": v["size"]}
-        for k, v in cluster_results["clusters"].items()
-    }
     api_key = st.session_state.get("gemini_api_key") or os.environ.get("GEMINI_API_KEY", "")
-    labeled_clusters = run_labeling(clusters_for_labeling, api_key)
-    
-    from semantic_engine.evaluator import (
-        hit_at_k,
-        reciprocal_rank,
-        mean_reciprocal_rank,
-        SAMPLE_TEST_QUERIES, compute_sus_score
-    )
 
-    retriever = get_retriever(
-        _engine=engine,
-        mechanic_labels=all_mechanics,
-        mechanic_embeddings=mechanic_embeddings,
-        labeled_clusters=labeled_clusters,
-        game_data=df
-    )
+    with st.spinner("Loading evaluation pipeline..."):
+        (
+            df,
+            all_mechanics,
+            engine,
+            mechanic_embeddings,
+            cluster_results,
+            labeled_clusters,
+            retriever,
+        ) = initialize_pipeline(api_key)
     
     tab1, tab2, tab3 = st.tabs(["📊 IR Metrics", "🧪 Per-Query Analysis", "📝 SUS Calculator"])
     
