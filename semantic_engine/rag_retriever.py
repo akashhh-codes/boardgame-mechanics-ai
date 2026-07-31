@@ -172,7 +172,7 @@ class RAGRetriever:
         self.game_data = game_data
         
         # Disabled for Streamlit deployment
-            self.cross_encoder = None
+        self.cross_encoder = None
         
         logger.info(
             f"RAGRetriever initialized: {len(mechanic_labels)} mechanics, "
