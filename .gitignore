@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Environment & Secrets
+.env
+*.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Streamlit
+.streamlit/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Large data files
+data/raw_pdfs/
+data/parsed_markdown/
+data/cleaned_rules/
+data/ontology_output/
+data/mechanics_dendrogram.png
+data/download_manifest.json
+data/bgg_massive_dataset.csv
+data/top_1000_board_games.csv
+
+# Documents
+*.docx
+
+# Agents
+.agents/
+
+scratch/
