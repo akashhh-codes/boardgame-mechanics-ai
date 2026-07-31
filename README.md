@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>🧠 Board Game Rulebook Intelligence System</h1>
+  <h1>🧠 AI Driven Ontology Extraction and Semantic Tooling for Board Game Design</h1>
   <p><strong>Ontology-Guided Hybrid Retrieval & Semantic Design Tool</strong></p>
   
   [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
