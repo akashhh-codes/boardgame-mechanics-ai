@@ -867,6 +867,14 @@ elif page == "📈 Evaluation":
             labeled_clusters,
             retriever,
         ) = initialize_pipeline(api_key)
+
+    from semantic_engine.evaluator import (
+        hit_at_k,
+        reciprocal_rank,
+        mean_reciprocal_rank,
+        SAMPLE_TEST_QUERIES,
+        compute_sus_score,
+       )
     
     tab1, tab2, tab3 = st.tabs(["📊 IR Metrics", "🧪 Per-Query Analysis", "📝 SUS Calculator"])
     
