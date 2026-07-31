@@ -347,7 +347,7 @@ with st.sidebar:
 
 
 # ─── PAGE: DASHBOARD (LANDING) ─────────────────────────────
-if page == "🏠 Dashboard":
+    if page == "🏠 Dashboard":
     st.markdown("""
     <div class="main-header" style="text-align:center;">
         <h1>🧠 Board Game Rulebook Intelligence System</h1>
@@ -358,18 +358,19 @@ if page == "🏠 Dashboard":
     # Initialize cached pipeline
     api_key = st.session_state.get("gemini_api_key") or os.environ.get("GEMINI_API_KEY", "")
 
-with st.spinner("Initializing Semantic Engine..."):
-    (
-        df,
-        all_mechanics,
-        engine,
-        mechanic_embeddings,
-        cluster_results,
-        labeled_clusters,
-        retriever,
-    ) = initialize_pipeline(api_key)
+    # FIXED: Indented to sit inside the 'if page == "🏠 Dashboard":' block
+    with st.spinner("Initializing Semantic Engine..."):
+        (
+            df,
+            all_mechanics,
+            engine,
+            mechanic_embeddings,
+            cluster_results,
+            labeled_clusters,
+            retriever,
+        ) = initialize_pipeline(api_key)
 
-    # Info Strip
+    # FIXED: Indented to sit inside the 'if page == "🏠 Dashboard":' block
     st.markdown(f"""
     <div style="background: rgba(124, 131, 255, 0.1); border: 1px solid rgba(124, 131, 255, 0.2); padding: 10px; border-radius: 8px; text-align: center; margin-bottom: 2rem;">
         <span style="margin: 0 15px;">🎲 <strong>Dataset:</strong> {len(df)} Games</span> | 
@@ -379,6 +380,7 @@ with st.spinner("Initializing Semantic Engine..."):
         <span style="margin: 0 15px;">🧠 <strong>Embedding:</strong> {SBERT_MODEL_NAME}</span>
     </div>
     """, unsafe_allow_html=True)
+
     
     # Zone 1: Search Box & Quick Examples
     if "search_query" not in st.session_state:
