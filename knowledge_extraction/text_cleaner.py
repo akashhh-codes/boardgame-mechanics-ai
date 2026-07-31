@@ -152,49 +152,73 @@ def analyze_with_spacy(sentences: List[str]) -> List[Dict]:
     """
     try:
         import spacy
+
         try:
             nlp = spacy.load("en_core_web_sm")
         except OSError:
-            logger.info("Downloading spaCy model...")
-            from spacy.cli import download
-            download("en_core_web_sm")
-            nlp = spacy.load("en_core_web_sm")
+            logger.error("spaCy model 'en_core_web_sm' is not installed.")
+            return [
+                {
+                    "text": s,
+                    "has_imperative": False,
+                    "has_conditional": False,
+                    "action_verbs": [],
+                    "token_count": 0,
+                }
+                for s in sentences
+            ]
+
     except ImportError:
         logger.warning("spaCy not available — using regex-only classification")
-        return [{"text": s, "has_imperative": False, "has_conditional": False} for s in sentences]
-    
+        return [
+            {
+                "text": s,
+                "has_imperative": False,
+                "has_conditional": False,
+                "action_verbs": [],
+                "token_count": 0,
+            }
+            for s in sentences
+        ]
+
     results = []
+
     for sent_text in sentences:
         doc = nlp(sent_text)
-        
+
         has_imperative = False
         has_conditional = False
         action_verbs = []
-        
+
         for token in doc:
-            # Detect imperative mood (verb at start without subject)
+            # Detect imperative mood
             if token.dep_ == "ROOT" and token.pos_ == "VERB":
-                # Check if there's no explicit subject before the verb
-                subjects = [child for child in token.children if child.dep_ in ("nsubj", "nsubjpass")]
-                if not subjects and token.i < 3:  # Verb near beginning
+                subjects = [
+                    child
+                    for child in token.children
+                    if child.dep_ in ("nsubj", "nsubjpass")
+                ]
+                if not subjects and token.i < 3:
                     has_imperative = True
-            
+
             # Detect conditional structures
             if token.lower_ in ("if", "when", "whenever", "unless"):
                 has_conditional = True
-            
+
             # Collect action verbs
             if token.pos_ == "VERB" and token.dep_ in ("ROOT", "conj", "xcomp"):
                 action_verbs.append(token.lemma_)
-        
-        results.append({
-            "text": sent_text,
-            "has_imperative": has_imperative,
-            "has_conditional": has_conditional,
-            "action_verbs": action_verbs,
-            "token_count": len(doc),
-        })
-    
+
+        results.append(
+            {
+                "text": sent_text,
+                "has_imperative": has_imperative,
+                "has_conditional": has_conditional,
+                "action_verbs": action_verbs,
+                "token_count": len(doc),
+            }
+        )
+
     return results
 
 
