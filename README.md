@@ -72,7 +72,7 @@ streamlit run app.py
 
 ## 📊 Dashboard Modules
 
-1. **🏠 Dashboard (Home)**: The central RAG search engine. Describe a game concept in natural language to get matching mechanics, game examples, and hierarchical context.
+1. **🏠 Dashboard (Home)**: The central RAG search engine. Describe a game concept in natural language to retrieve matching mechanics, similarity scores, and hierarchical ontology context.
 2. **🌳 Ontology Explorer**: View the HAC dendrogram, MDA-labeled clusters, OntoClean validation results, 2D UMAP visualizations, and export the ontology (JSON/OWL).
 3. **📈 Evaluation**: Review quantitative benchmark metrics (Hit Rate@K, MRR) and qualitative System Usability Scale (SUS) scores.
 4. **📊 System / Debug**: Inspect the data processing pipeline, parser outputs, text-cleaning stages, configuration, and generated artifacts used by the system.
@@ -90,7 +90,7 @@ The system operates on a continuous pipeline transforming unstructured documents
                                                      ↓
                                         Classified Rule Sentences
                                                      ↓
-[ BGG Dataset ]  →  Mechanics  →  SBERT Embeddings  →  UMAP Reduction
+Mechanics  →  SBERT Embeddings  →  UMAP Reduction
                                                      ↓
                                           HAC Clustering + Dendrogram
                                                      ↓
