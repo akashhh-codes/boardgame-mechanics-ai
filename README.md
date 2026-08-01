@@ -3,7 +3,7 @@
   <p><strong>Ontology-Guided Hybrid Retrieval & Semantic Design Tool</strong></p>
   
   [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
   [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://ontology-extraction-and-semantic-tooling-for-board-game-design.streamlit.app/)
   [![Framework: MDA](https://img.shields.io/badge/Framework-MDA-ff69b4.svg)](#-theoretical-framework)
   [![Validation: OntoClean](https://img.shields.io/badge/Validation-OntoClean-success.svg)](#-theoretical-framework)
